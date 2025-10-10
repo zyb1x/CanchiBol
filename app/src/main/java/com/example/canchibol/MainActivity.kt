@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.canchibol.layouts.LayoutIniciarSesion
 import com.example.canchibol.layouts.LayoutInicio
+import com.example.canchibol.layouts.LayoutRegistro
 import com.example.canchibol.ui.theme.CanchiBolTheme
 
 
@@ -22,8 +23,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LayoutInicio(modifier = Modifier)
+            //LayoutInicio(modifier = Modifier)
             //LayoutIniciarSesion(modifier = Modifier)
+            LayoutRegistro(modifier = Modifier)
         }
     }
 }

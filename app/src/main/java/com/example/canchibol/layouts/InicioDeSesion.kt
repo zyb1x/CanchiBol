@@ -44,7 +44,7 @@ fun LayoutIniciarSesion(modifier: Modifier){
         var contrasenia by remember { mutableStateOf("") }
         var showPassword by remember { mutableStateOf(false) }
 
-        var(Logo, textFieldUsuario, textFieldContrasenia,
+        var(logo, textFieldUsuario, textFieldContrasenia,
             btnIniciarSesion, btnRegistrarse, divider) = createRefs()
 
         Image( //imagen
@@ -52,7 +52,7 @@ fun LayoutIniciarSesion(modifier: Modifier){
             contentDescription = "Logo Aplicacion",
             modifier = Modifier
                 .size(150.dp)
-                .constrainAs(Logo){
+                .constrainAs(logo){
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(parent.top, margin = 80.dp)
@@ -66,7 +66,7 @@ fun LayoutIniciarSesion(modifier: Modifier){
                 .width(300.dp)
                 .height(50.dp)
                 .constrainAs(textFieldUsuario){
-                    top.linkTo(Logo.bottom, margin = 100.dp)
+                    top.linkTo(logo.bottom, margin = 100.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
@@ -93,7 +93,7 @@ fun LayoutIniciarSesion(modifier: Modifier){
         )
 
 
-        OutlinedTextField( //textfield de ususario
+        OutlinedTextField( //textfield de contraseña
             value = contrasenia,
             onValueChange = { contrasenia = it },
             modifier = Modifier

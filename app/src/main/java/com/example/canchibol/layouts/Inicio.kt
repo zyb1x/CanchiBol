@@ -25,6 +25,7 @@ import com.example.canchibol.ui.theme.MediumGreen
 @Composable
 fun LayoutInicio(modifier: Modifier){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+
     val(btnIniciarSesion, btnRegistrarse, logo, textoBienvenido) = createRefs()
 
         Text(text = "Bienvenudo", modifier = Modifier
