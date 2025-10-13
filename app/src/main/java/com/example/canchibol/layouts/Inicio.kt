@@ -28,7 +28,7 @@ fun LayoutInicio(modifier: Modifier){
 
     val(btnIniciarSesion, btnRegistrarse, logo, textoBienvenido) = createRefs()
 
-        Text(text = "Bienvenudo", modifier = Modifier
+        Text(text = "Bienvenido", modifier = Modifier
             .constrainAs(textoBienvenido){
                 top.linkTo(parent.top, margin = 90.dp)
                 start.linkTo(parent.start)
@@ -67,7 +67,7 @@ fun LayoutInicio(modifier: Modifier){
             )
         ) {
             Text(
-                text = "Inciar sesión",
+                text = "Iniciar sesión",
                 fontSize = 15.sp
             )
         }
