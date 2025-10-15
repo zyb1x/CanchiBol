@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             //LayoutInicio(modifier = Modifier)
             //LayoutIniciarSesion(modifier = Modifier)
-            LayoutRegistro(modifier = Modifier)
+            //LayoutRegistro(modifier = Modifier)
         }
     }
 }

@@ -64,7 +64,7 @@ fun LayoutIniciarSesion(modifier: Modifier){
             onValueChange = { usuario = it },
             modifier = Modifier
                 .width(300.dp)
-                .height(50.dp)
+                //.height(50.dp)
                 .constrainAs(textFieldUsuario){
                     top.linkTo(logo.bottom, margin = 100.dp)
                     start.linkTo(parent.start)
@@ -72,9 +72,15 @@ fun LayoutIniciarSesion(modifier: Modifier){
                 },
             placeholder = {
                 Text(
-                    "Correo / Usuario"
+                    "Correo / Usuario",
+                    fontSize = 14.sp,
+                    lineHeight = 14.sp
                 )
             },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
@@ -98,7 +104,7 @@ fun LayoutIniciarSesion(modifier: Modifier){
             onValueChange = { contrasenia = it },
             modifier = Modifier
                 .width(300.dp)
-                .height(50.dp)
+                //.height(50.dp)
                 .constrainAs(textFieldContrasenia){
                     top.linkTo(textFieldUsuario.bottom, margin = 20.dp)
                     start.linkTo(parent.start)
@@ -106,9 +112,15 @@ fun LayoutIniciarSesion(modifier: Modifier){
                 },
             placeholder = {
                 Text(
-                    "Contraseña"
+                    "Contraseña",
+                    fontSize = 14.sp,
+                    lineHeight = 14.sp
                 )
             },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (showPassword) { //icono mostrar / ocultar contraseña

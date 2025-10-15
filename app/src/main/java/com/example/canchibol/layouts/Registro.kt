@@ -3,6 +3,7 @@ package com.example.canchibol.layouts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -68,7 +70,8 @@ fun LayoutRegistro(modifier: Modifier){
             onValueChange = { nombre = it },
             modifier = Modifier
                 .width(300.dp)
-                .height(53.dp)
+
+                //.height(46.dp)
                 .constrainAs(textFieldNombre){
                     top.linkTo(logo.bottom, margin = 40.dp)
                     start.linkTo(parent.start)
@@ -76,9 +79,15 @@ fun LayoutRegistro(modifier: Modifier){
                 },
             placeholder = {
                 Text(
-                    "Nombre(s)"
+                    "Nombre(s)",
+                    fontSize = 14.sp,
+                    lineHeight = 14.sp
                 )
             },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
@@ -101,7 +110,8 @@ fun LayoutRegistro(modifier: Modifier){
             onValueChange = { noEmpleado = it },
             modifier = Modifier
                 .width(300.dp)
-                .height(53.dp)
+                //.height(46.dp)
+
                 .constrainAs(textFieldNEmpleado){
                     top.linkTo(textFieldNombre.bottom, margin = 15.dp)
                     start.linkTo(parent.start)
@@ -109,9 +119,15 @@ fun LayoutRegistro(modifier: Modifier){
                 },
             placeholder = {
                 Text(
-                    "Numero de empleado"
+                    "Numero de empleado",
+                    fontSize = 14.sp,
+                    lineHeight = 14.sp
                 )
             },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
@@ -134,7 +150,7 @@ fun LayoutRegistro(modifier: Modifier){
             onValueChange = { correo = it },
             modifier = Modifier
                 .width(300.dp)
-                .height(53.dp)
+                //.height(46.dp)
                 .constrainAs(textFieldCorreo){
                     top.linkTo(textFieldNEmpleado.bottom, margin = 15.dp)
                     start.linkTo(parent.start)
@@ -142,9 +158,15 @@ fun LayoutRegistro(modifier: Modifier){
                 },
             placeholder = {
                 Text(
-                    "Correo"
+                    "Correo",
+                    fontSize = 14.sp,
+                    lineHeight = 14.sp
                 )
             },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
@@ -168,7 +190,8 @@ fun LayoutRegistro(modifier: Modifier){
             onValueChange = { contrasenia = it },
             modifier = Modifier
                 .width(300.dp)
-                .height(50.dp)
+                //.height(46.dp)
+
                 .constrainAs(textFieldContrasenia){
                     top.linkTo(textFieldCorreo.bottom, margin = 15.dp)
                     start.linkTo(parent.start)
@@ -176,9 +199,16 @@ fun LayoutRegistro(modifier: Modifier){
                 },
             placeholder = {
                 Text(
-                    "Contraseña"
+                    "Contraseña", modifier = Modifier
+                        ,
+                        fontSize = 14.sp,
+                    lineHeight = 14.sp
                 )
             },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (showPassword) { //icono mostrar / ocultar contraseña
@@ -223,7 +253,7 @@ fun LayoutRegistro(modifier: Modifier){
             onValueChange = { confContra = it },
             modifier = Modifier
                 .width(300.dp)
-                .height(50.dp)
+                //.height(46.dp)
                 .constrainAs(textFieldConfContra){
                     top.linkTo(textFieldContrasenia.bottom, margin = 20.dp)
                     start.linkTo(parent.start)
@@ -231,9 +261,15 @@ fun LayoutRegistro(modifier: Modifier){
                 },
             placeholder = {
                 Text(
-                    "Confirmar contraseña"
+                    "Confirmar contraseña",
+                    fontSize = 14.sp,
+                    lineHeight = 14.sp
                 )
             },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (showPassword) { //icono mostrar / ocultar contraseña
@@ -295,7 +331,7 @@ fun LayoutRegistro(modifier: Modifier){
                 .width(158.dp)
                 .height(45.dp)
                 .constrainAs(btnIniciarSesion){
-                    top.linkTo(btnRegistrarse.bottom, margin = 115.dp)
+                    top.linkTo(btnRegistrarse.bottom, margin = 95.dp)
                     start.linkTo(btnRegistrarse.start, margin = -10.dp)
 
                 },
@@ -304,7 +340,7 @@ fun LayoutRegistro(modifier: Modifier){
                 containerColor = LightGreen,
                 contentColor = MediumGreen
             )) {
-            Text("◀ Iniciar Sesión", fontSize = 15.sp)
+            Text("Iniciar Sesión", fontSize = 15.sp)
         }
 
 
