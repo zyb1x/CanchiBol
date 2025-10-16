@@ -51,7 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.constraint.layout)
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
-    
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
