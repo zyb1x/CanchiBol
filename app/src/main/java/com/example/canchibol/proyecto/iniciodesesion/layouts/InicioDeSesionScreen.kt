@@ -1,4 +1,4 @@
-package com.example.canchibol.layouts
+package com.example.canchibol.proyecto.iniciodesesion.layouts
 
 
 import androidx.compose.foundation.Image
