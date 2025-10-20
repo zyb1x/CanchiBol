@@ -5,7 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.Modifier
+import com.example.canchibol.proyecto.inicio.layouts.ui.LayoutInicio
+import com.example.canchibol.proyecto.iniciodesesion.layouts.LayoutIniciarSesion
 import com.example.canchibol.proyecto.menuDeInicio.layouts.ui.LayoutMenuInicio
+import com.example.canchibol.proyecto.registro.layouts.LayoutRegistro
 
 
 class MainActivity : ComponentActivity() {
@@ -13,10 +16,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            //LayoutInicio(modifier = Modifier)
+            LayoutInicio(modifier = Modifier)
             //LayoutIniciarSesion(modifier = Modifier)
             //LayoutRegistro(modifier = Modifier)
-            LayoutMenuInicio(modifier = Modifier)
+            //LayoutMenuInicio(modifier = Modifier)
         }
     }
 }
