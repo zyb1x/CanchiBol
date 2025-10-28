@@ -70,6 +70,7 @@ fun LayoutIniciarSesion(modifier: Modifier){
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
+            maxLines = 1,
             placeholder = {
                 Text(
                     "Correo / Usuario",
@@ -122,6 +123,7 @@ fun LayoutIniciarSesion(modifier: Modifier){
                 lineHeight = 14.sp
             ),
             singleLine = true,
+            maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (showPassword) { //icono mostrar / ocultar contraseña
                 VisualTransformation.None
