@@ -48,6 +48,7 @@ class MainActivity : ComponentActivity() {
                     )
 
                     if (loginViewModel.loginExitoso.value) {
+                        pantallaActual = "menu"
                         loginViewModel.resetLogin()
                     }
                 }
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
                     )
 
                     if (registroViewModel.registroExitoso.value) {
+                        pantallaActual = "login"
                         registroViewModel.resetRegistro()
                     }
                 }
