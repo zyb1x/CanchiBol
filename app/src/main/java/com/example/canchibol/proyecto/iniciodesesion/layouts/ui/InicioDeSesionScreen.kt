@@ -1,87 +1,65 @@
 package com.example.canchibol.proyecto.iniciodesesion.layouts.ui
 
-
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.example.canchibol.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.ui.unit.sp
-import com.example.canchibol.ui.theme.LightGreen
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import com.example.canchibol.ui.theme.DarkGreen
-import com.example.canchibol.ui.theme.GrayGreen
-import com.example.canchibol.ui.theme.MediumGreen
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.VisualTransformation
-
-
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.canchibol.R
+import com.example.canchibol.proyecto.iniciodesesion.layouts.viewmodel.InicioDeSesionViewModel
+import com.example.canchibol.ui.theme.*
 
 @Composable
-fun LayoutIniciarSesion(modifier: Modifier){
-    ConstraintLayout (modifier = Modifier.fillMaxSize()){
+fun LayoutIniciarSesion(
+    modifier: Modifier,
+    viewModel: InicioDeSesionViewModel = viewModel(),
+    onIrARegistro: () -> Unit // para cambiar a registro tambien
+) {
+    val usuario by viewModel.usuario
+    val contrasenia by viewModel.contrasenia
+    val showPassword by viewModel.mostrarPassword
+    val errorMensaje = viewModel.errorMensaje.value
 
-        var usuario by remember { mutableStateOf("") }
-        var contrasenia by remember { mutableStateOf("") }
-        var showPassword by remember { mutableStateOf(false) }
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val (logo, textFieldUsuario, textFieldContrasenia, btnIniciarSesion, btnRegistrarse, divider, errorText) = createRefs()
 
-        var(logo, textFieldUsuario, textFieldContrasenia,
-            btnIniciarSesion, btnRegistrarse, divider) = createRefs()
-
-        Image( //imagen
+        Image(
             painter = painterResource(id = R.drawable.logo_canchas),
             contentDescription = "Logo Aplicacion",
             modifier = Modifier
                 .size(150.dp)
-                .constrainAs(logo){
+                .constrainAs(logo) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(parent.top, margin = 80.dp)
                 }
         )
 
-        OutlinedTextField( //Textfield de usuario
+        OutlinedTextField(
             value = usuario,
-            onValueChange = { usuario = it },
+            onValueChange = { viewModel.onUsuarioChange(it) },
             modifier = Modifier
                 .width(300.dp)
-                //.height(50.dp)
-                .constrainAs(textFieldUsuario){
+                .constrainAs(textFieldUsuario) {
                     top.linkTo(logo.bottom, margin = 100.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            maxLines = 1,
-            placeholder = {
-                Text(
-                    "Correo / Usuario",
-                    fontSize = 14.sp,
-                    lineHeight = 14.sp
-                )
-            },
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 14.sp,
-                lineHeight = 14.sp
-            ),
+            placeholder = { Text("Correo / Usuario", fontSize = 14.sp, lineHeight = 14.sp) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
@@ -91,60 +69,32 @@ fun LayoutIniciarSesion(modifier: Modifier){
                 focusedTextColor = MediumGreen,
                 unfocusedTextColor = MediumGreen,
                 cursorColor = MediumGreen,
-                focusedLeadingIconColor = DarkGreen,
                 focusedPlaceholderColor = MediumGreen,
                 unfocusedPlaceholderColor = DarkGreen,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
-                )
+            )
         )
 
-
-        OutlinedTextField( //textfield de contraseña
+        OutlinedTextField(
             value = contrasenia,
-            onValueChange = { contrasenia = it },
+            onValueChange = { viewModel.onContraseniaChange(it) },
             modifier = Modifier
                 .width(300.dp)
-                //.height(50.dp)
-                .constrainAs(textFieldContrasenia){
+                .constrainAs(textFieldContrasenia) {
                     top.linkTo(textFieldUsuario.bottom, margin = 20.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            placeholder = {
-                Text(
-                    "Contraseña",
-                    fontSize = 14.sp,
-                    lineHeight = 14.sp
-                )
-            },
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 14.sp,
-                lineHeight = 14.sp
-            ),
+            placeholder = { Text("Contraseña", fontSize = 14.sp, lineHeight = 14.sp) },
             singleLine = true,
-            maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = if (showPassword) { //icono mostrar / ocultar contraseña
-                VisualTransformation.None
-            } else {
-                PasswordVisualTransformation()
-            },
+            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                IconButton(
-                    onClick = { showPassword = !showPassword }
-                ) {
+                IconButton(onClick = { viewModel.alternarMostrarPassword() }) {
                     Icon(
-                        imageVector = if (showPassword) {
-                            Icons.Filled.Visibility
-                        } else {
-                            Icons.Filled.VisibilityOff
-                        },
-                        contentDescription = if (showPassword) {
-                            "Ocultar contraseña"
-                        } else {
-                            "Mostrar contraseña"
-                        }
+                        imageVector = if (showPassword) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = null
                     )
                 }
             },
@@ -159,60 +109,63 @@ fun LayoutIniciarSesion(modifier: Modifier){
                 unfocusedPlaceholderColor = DarkGreen,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
-                )
+            )
         )
 
-        Button(onClick = {/*accion del boton*/}, //boton inicio de sesion
+        Button(
+            onClick = { viewModel.validarLogin() },
             modifier = Modifier
                 .width(300.dp)
                 .height(45.dp)
-                .constrainAs(btnIniciarSesion){
+                .constrainAs(btnIniciarSesion) {
                     top.linkTo(textFieldContrasenia.bottom, margin = 40.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MediumGreen,
-                    contentColor = LightGreen
-                )) {
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MediumGreen,
+                contentColor = LightGreen
+            )
+        ) {
             Text("Iniciar Sesión", fontSize = 15.sp)
+        }
+
+        if (errorMensaje != null) {
+            Text(
+                text = errorMensaje,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.constrainAs(errorText) {
+                    top.linkTo(btnIniciarSesion.bottom, margin = 10.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+            )
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .constrainAs(divider) {
-                    top.linkTo(btnIniciarSesion.bottom, margin = 40.dp)
+                    top.linkTo(btnIniciarSesion.bottom, margin = 60.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Divider(
-                modifier = Modifier.weight(1f),
-                color = Color.LightGray,
-                thickness = 1.dp
-            )
-            Text(
-                text = "o",
-                modifier = Modifier.padding(horizontal = 18.dp),
-                color = Color.Gray,
-                fontSize = 14.sp
-            )
-            Divider(
-                modifier = Modifier.weight(1f),
-                color = Color.LightGray,
-                thickness = 1.dp
-            )
+            Divider(modifier = Modifier.weight(1f), color = Color.LightGray, thickness = 1.dp)
+            Text(text = "o", modifier = Modifier.padding(horizontal = 18.dp), color = Color.Gray, fontSize = 14.sp)
+            Divider(modifier = Modifier.weight(1f), color = Color.LightGray, thickness = 1.dp)
         }
 
-        Button(onClick = {/*accion del boton*/}, //boton registrarse
+        Button(
+            onClick = { onIrARegistro() },
             modifier = Modifier
                 .width(300.dp)
                 .height(45.dp)
-                .constrainAs(btnRegistrarse){
+                .constrainAs(btnRegistrarse) {
                     top.linkTo(divider.bottom, margin = 40.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -221,7 +174,8 @@ fun LayoutIniciarSesion(modifier: Modifier){
             colors = ButtonDefaults.buttonColors(
                 containerColor = LightGreen,
                 contentColor = MediumGreen
-            )) {
+            )
+        ) {
             Text("Registrarse", fontSize = 15.sp)
         }
     }
