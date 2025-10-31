@@ -37,6 +37,7 @@ class InicioDeSesionViewModel : ViewModel() {
         } else {
             _errorMensaje.value = "Credenciales incorrectas"
         }
+        // tiene que jalar
     }
     fun resetLogin() {
         _loginExitoso.value = false
