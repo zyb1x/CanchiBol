@@ -67,10 +67,19 @@ class MainActivity : ComponentActivity() {
                 }
 
                 "menu" -> {
-                    LayoutMenuInicio(modifier = Modifier, viewModel = menuViewModel)
+                        LayoutMenuInicio(
+                            modifier = Modifier,
+                            viewModel = menuViewModel,
+                            onCerrarSesion = {
+                                pantallaActual = "login"
+                            }
+                        )
+                    }
+
                 }
+
             }
 
         }
     }
-}
+

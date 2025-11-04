@@ -20,7 +20,8 @@ import com.example.canchibol.ui.theme.*
 @Composable
 fun LayoutMenuInicio(
     modifier: Modifier,
-    viewModel: MenuInicioViewModel = viewModel()
+    viewModel: MenuInicioViewModel = viewModel(),
+    onCerrarSesion: () -> Unit
 ) {
     val opcionSeleccionada by viewModel.opcionSeleccionada
 
@@ -185,5 +186,33 @@ fun LayoutMenuInicio(
             }
         }
         Spacer(modifier = Modifier.height(35.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 80.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Button(
+                onClick = { onCerrarSesion() },
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(50.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MediumGreen,
+                    contentColor = LightGreen
+                )
+            ) {
+                Text("Cerrar sesión", fontSize = 16.sp)
+            }
+        }
+
     }
+}
+
+private fun ColumnScope.onCerrarSesion() {
+    TODO("Not yet implemented")
 }
