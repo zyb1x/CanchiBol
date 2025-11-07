@@ -1,4 +1,4 @@
-package com.example.canchibol.proyecto.registro.layouts.ui
+package com.example.canchibol.presentation.registro.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,16 +10,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -31,32 +23,45 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.canchibol.R
-import com.example.canchibol.proyecto.registro.layouts.viewmodel.RegistroViewModel
-import com.example.canchibol.ui.theme.DarkGreen
-import com.example.canchibol.ui.theme.GrayGreen
-import com.example.canchibol.ui.theme.LightGreen
-import com.example.canchibol.ui.theme.MediumGreen
+import com.example.canchibol.presentation.registro.viewmodel.RegistroViewModel
+import com.example.canchibol.presentation.registro.viewmodel.RegistroViewModelFactory
+import com.example.canchibol.ui.theme.*
+
 
 @Composable
 fun LayoutRegistro(
-    modifier: Modifier,
-    viewModel: RegistroViewModel = viewModel(),
-    onVolverLogin: () -> Unit
+    modifier: Modifier = Modifier,
+    viewModel: RegistroViewModel = viewModel(factory = RegistroViewModelFactory()),
+    onVolverLogin: () -> Unit,
+    onRegistroExitoso: () -> Unit
 ) {
 
     val nombre by viewModel.nombre
+    val apellidoPaterno by viewModel.apellidoPaterno
+    val apellidoMaterno by viewModel.apellidoMaterno
     val noEmpleado by viewModel.noEmpleado
     val correo by viewModel.correo
     val contrasenia by viewModel.contrasenia
     val confContra by viewModel.confirmarContrasenia
     val showPassword by viewModel.mostrarPassword
-    val error = viewModel.mensajeError.value
+    val error by viewModel.mensajeError
+    val isLoading by viewModel.isLoading
+    val registroExitoso by viewModel.registroExitoso
+    val currentError = error
+
+
+    LaunchedEffect(registroExitoso) {
+        if (registroExitoso != null) {
+            onRegistroExitoso() // Navegar al login
+            viewModel.resetRegistro() // Limpiar el estado
+        }
+    }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-
         val (logo, textFieldNombre, textFieldNEmpleado, textFieldCorreo,
             textFieldContrasenia, textFieldConfContra, btnRegistrarse,
-            btnIniciarSesion, errorText) = createRefs()
+            btnIniciarSesion, errorText, textFieldApellidoPaterno,
+            textFieldApellidoMaterno) = createRefs()
 
         // Logo de la aplicación
         Image(
@@ -67,12 +72,12 @@ fun LayoutRegistro(
                 .constrainAs(logo) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(parent.top, margin = 20.dp)
+                    top.linkTo(parent.top, margin = 5.dp)
                 }
         )
 
-
-        OutlinedTextField( //Textfield nombre
+        // TextField nombre
+        OutlinedTextField(
             value = nombre,
             onValueChange = { viewModel.onNombreChange(it) },
             modifier = Modifier
@@ -83,16 +88,13 @@ fun LayoutRegistro(
                     end.linkTo(parent.end)
                 },
             placeholder = {
-                Text(
-                    "Nombre(s)",
-                    fontSize = 14.sp,
-                    lineHeight = 14.sp
-                )
+                Text("Nombre(s)", fontSize = 14.sp, lineHeight = 14.sp)
             },
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 14.sp,
                 lineHeight = 14.sp
             ),
+            enabled = !isLoading,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             shape = RoundedCornerShape(10.dp),
@@ -110,28 +112,97 @@ fun LayoutRegistro(
             )
         )
 
-        // TextField de numero de Empleado
+        // TextField apellido paterno
+        OutlinedTextField(
+            value = apellidoPaterno,
+            onValueChange = { viewModel.onApellidoPaternoChange(it) },
+            modifier = Modifier
+                .width(300.dp)
+                .constrainAs(textFieldApellidoPaterno) {
+                    top.linkTo(textFieldNombre.bottom, margin = 15.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            placeholder = {
+                Text("Apellido paterno", fontSize = 14.sp, lineHeight = 14.sp)
+            },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
+            enabled = !isLoading,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = LightGreen,
+                unfocusedContainerColor = GrayGreen,
+                focusedTextColor = MediumGreen,
+                unfocusedTextColor = MediumGreen,
+                cursorColor = MediumGreen,
+                focusedLeadingIconColor = DarkGreen,
+                focusedPlaceholderColor = MediumGreen,
+                unfocusedPlaceholderColor = DarkGreen,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+
+        // TextField apellido materno
+        OutlinedTextField(
+            value = apellidoMaterno,
+            onValueChange = { viewModel.onApellidoMaternoChange(it) },
+            modifier = Modifier
+                .width(300.dp)
+                .constrainAs(textFieldApellidoMaterno) {
+                    top.linkTo(textFieldApellidoPaterno.bottom, margin = 15.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            placeholder = {
+                Text("Apellido materno", fontSize = 14.sp, lineHeight = 14.sp)
+            },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 14.sp,
+                lineHeight = 14.sp
+            ),
+            enabled = !isLoading,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = LightGreen,
+                unfocusedContainerColor = GrayGreen,
+                focusedTextColor = MediumGreen,
+                unfocusedTextColor = MediumGreen,
+                cursorColor = MediumGreen,
+                focusedLeadingIconColor = DarkGreen,
+                focusedPlaceholderColor = MediumGreen,
+                unfocusedPlaceholderColor = DarkGreen,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+
+        // TextField de número de Empleado
         OutlinedTextField(
             value = noEmpleado,
             onValueChange = { viewModel.onNoEmpleadoChange(it) },
             modifier = Modifier
                 .width(300.dp)
                 .constrainAs(textFieldNEmpleado) {
-                    top.linkTo(textFieldNombre.bottom, margin = 15.dp)
+                    top.linkTo(textFieldApellidoMaterno.bottom, margin = 15.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
             placeholder = {
-                Text(
-                    "Número de empleado",
-                    fontSize = 14.sp,
-                    lineHeight = 14.sp
-                )
+                Text("Número de empleado", fontSize = 14.sp, lineHeight = 14.sp)
             },
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 14.sp,
                 lineHeight = 14.sp
             ),
+            enabled = !isLoading,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             shape = RoundedCornerShape(10.dp),
@@ -161,16 +232,13 @@ fun LayoutRegistro(
                     end.linkTo(parent.end)
                 },
             placeholder = {
-                Text(
-                    "Correo",
-                    fontSize = 14.sp,
-                    lineHeight = 14.sp
-                )
+                Text("Correo", fontSize = 14.sp, lineHeight = 14.sp)
             },
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 14.sp,
                 lineHeight = 14.sp
             ),
+            enabled = !isLoading,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
@@ -188,8 +256,8 @@ fun LayoutRegistro(
             )
         )
 
-
-        OutlinedTextField( //Texfield Contraseña
+        // TextField Contraseña
+        OutlinedTextField(
             value = contrasenia,
             onValueChange = { viewModel.onContraseniaChange(it) },
             modifier = Modifier
@@ -200,29 +268,22 @@ fun LayoutRegistro(
                     end.linkTo(parent.end)
                 },
             placeholder = {
-                Text(
-                    "Contraseña",
-                    fontSize = 14.sp,
-                    lineHeight = 14.sp
-                )
+                Text("Contraseña", fontSize = 14.sp, lineHeight = 14.sp)
             },
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 14.sp,
                 lineHeight = 14.sp
             ),
+            enabled = !isLoading,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-
             visualTransformation = if (showPassword) {
                 VisualTransformation.None
             } else {
                 PasswordVisualTransformation()
             },
             trailingIcon = {
-                IconButton(
-
-                    onClick = { viewModel.alternarMostrarPassword() }
-                ) {
+                IconButton(onClick = { viewModel.alternarMostrarPassword() }) {
                     Icon(
                         imageVector = if (showPassword) {
                             Icons.Filled.Visibility
@@ -263,16 +324,13 @@ fun LayoutRegistro(
                     end.linkTo(parent.end)
                 },
             placeholder = {
-                Text(
-                    "Confirmar contraseña",
-                    fontSize = 14.sp,
-                    lineHeight = 14.sp
-                )
+                Text("Confirmar contraseña", fontSize = 14.sp, lineHeight = 14.sp)
             },
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 14.sp,
                 lineHeight = 14.sp
             ),
+            enabled = !isLoading,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (showPassword) {
@@ -281,9 +339,7 @@ fun LayoutRegistro(
                 PasswordVisualTransformation()
             },
             trailingIcon = {
-                IconButton(
-                    onClick = { viewModel.alternarMostrarPassword() }
-                ) {
+                IconButton(onClick = { viewModel.alternarMostrarPassword() }) {
                     Icon(
                         imageVector = if (showPassword) {
                             Icons.Filled.Visibility
@@ -312,7 +368,7 @@ fun LayoutRegistro(
             )
         )
 
-
+        // Botón de Registrarse
         Button(
             onClick = { viewModel.validarRegistro() },
             modifier = Modifier
@@ -323,19 +379,29 @@ fun LayoutRegistro(
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
+            enabled = !isLoading,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MediumGreen,
                 contentColor = LightGreen
             )
         ) {
-            Text("Registrarse", fontSize = 15.sp)
+            if (isLoading) {
+
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = LightGreen,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text("Registrarse", fontSize = 15.sp)
+            }
         }
 
-
-        if (error != null) {
+        // Mostrar mensaje de error si existe
+        if (!currentError.isNullOrEmpty()) {
             Text(
-                text = error,
+                text = currentError,
                 color = Color.Red,
                 fontSize = 14.sp,
                 modifier = Modifier.constrainAs(errorText) {
@@ -346,23 +412,22 @@ fun LayoutRegistro(
             )
         }
 
-        // Botón de Iniciar Sesión
+        // Botón para volver al Login
         Button(
-            onClick = { onVolverLogin() },  // Navega de regreso al login
+            onClick = onVolverLogin,
             modifier = Modifier
-                .width(158.dp)
-                .height(45.dp)
                 .constrainAs(btnIniciarSesion) {
-                    top.linkTo(btnRegistrarse.bottom, margin = 95.dp)
-                    start.linkTo(btnRegistrarse.start, margin = -10.dp)
+                    end.linkTo(logo.start, margin = 60.dp)
+                    bottom.linkTo(logo.bottom, margin = 20.dp)
                 },
+            enabled = !isLoading,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = LightGreen,
                 contentColor = MediumGreen
             )
         ) {
-            Text("Iniciar Sesión", fontSize = 15.sp)
+            Text("<-", fontSize = 20.sp)
         }
     }
 }

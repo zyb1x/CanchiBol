@@ -1,4 +1,4 @@
-package com.example.canchibol.proyecto.inicio.layouts.ui
+package com.example.canchibol.presentation.inicio.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,23 +10,24 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.canchibol.R
-import com.example.canchibol.proyecto.inicio.layouts.viewmodel.InicioViewModel
 import com.example.canchibol.ui.theme.LightGreen
 import com.example.canchibol.ui.theme.MediumGreen
 
+
 @Composable
-fun LayoutInicio(modifier: Modifier, viewModel: InicioViewModel = viewModel()) {
-    val navegarIniciarSesion by viewModel.navegarIniciarSesion
-    val navegarRegistro by viewModel.navegarRegistro
+fun LayoutInicio(
+    modifier: Modifier = Modifier,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToRegister: () -> Unit
+) {
+
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (btnIniciarSesion, btnRegistrarse, logo, textoBienvenido) = createRefs()
@@ -56,7 +57,7 @@ fun LayoutInicio(modifier: Modifier, viewModel: InicioViewModel = viewModel()) {
         )
 
         Button(
-            onClick = { viewModel.irAIniciarSesion() }, // conectado al ViewModel
+            onClick = onNavigateToLogin,
             modifier = Modifier
                 .width(140.dp)
                 .height(45.dp)
@@ -75,7 +76,7 @@ fun LayoutInicio(modifier: Modifier, viewModel: InicioViewModel = viewModel()) {
         }
 
         Button(
-            onClick = { viewModel.irARegistro() }, // conectado al ViewModel
+            onClick = onNavigateToRegister,
             modifier = Modifier
                 .width(140.dp)
                 .height(45.dp)
@@ -89,8 +90,7 @@ fun LayoutInicio(modifier: Modifier, viewModel: InicioViewModel = viewModel()) {
                 contentColor = MediumGreen
             )
         ) {
-            Text(text = "Registrarse",
-                fontSize = 15.sp)
+            Text(text = "Registrarse", fontSize = 15.sp)
         }
     }
 }

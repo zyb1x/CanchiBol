@@ -1,4 +1,4 @@
-package com.example.canchibol.proyecto.inicio.layouts.viewmodel
+package com.example.canchibol.presentation.inicio.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
