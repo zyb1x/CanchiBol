@@ -6,10 +6,7 @@ import com.example.canchibol.domain.entity.UserEntity
 
 
 interface AuthRepository {
-    /**
-     * Inicia sesión con email y contraseña
-     * @return Result<UserEntity> - Success con el usuario o Failure con el error
-     */
+
     suspend fun login(email: String, password: String): Result<UserEntity>
 
     /**

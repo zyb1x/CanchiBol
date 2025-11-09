@@ -12,9 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.canchibol.presentation.agendarpartido.ui.AgendarPartidoScreen
+import com.example.canchibol.presentation.calendario.ui.CalendarioScreen
+import com.example.canchibol.presentation.canchas.ui.CanchasScreen
 import com.example.canchibol.presentation.inicio.ui.LayoutInicio
 import com.example.canchibol.presentation.iniciodesesion.ui.LayoutIniciarSesion
 import com.example.canchibol.presentation.registro.ui.LayoutRegistro
+import com.example.canchibol.presentation.reporte.ui.ReporteScreen
 import com.example.canchibol.proyecto.menudinicio.layouts.ui.LayoutMenuInicio
 import com.example.canchibol.ui.theme.CanchiBolTheme
 
@@ -56,9 +60,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         startDestination = "inicio", // Pantalla inicial
         modifier = modifier
     ) {
-        // ========================================
+
         // PANTALLA DE INICIO/BIENVENIDA
-        // ========================================
+
         composable("inicio") {
             LayoutInicio(
                 modifier = Modifier.fillMaxSize(),
@@ -80,9 +84,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             )
         }
 
-        // ========================================
+
         // PANTALLA DE LOGIN
-        // ========================================
+
         composable("login") {
             LayoutIniciarSesion(
                 modifier = Modifier.fillMaxSize(),
@@ -102,9 +106,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             )
         }
 
-        // ========================================
+
         // PANTALLA DE REGISTRO
-        // ========================================
+
         composable("registro") {
             LayoutRegistro(
                 modifier = Modifier.fillMaxSize(),
@@ -120,13 +124,14 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                         // Eliminar "registro" del back stack
                         popUpTo("registro") { inclusive = true }
                     }
-                }
+                },
+
             )
         }
 
-        // ========================================
-        // PANTALLA DE MENÚ PRINCIPAL
-        // ========================================
+
+        // PANTALLA DE MENU PRINCIPAL
+
         composable("menu") {
             LayoutMenuInicio(
                 modifier = Modifier.fillMaxSize(),
@@ -137,8 +142,146 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                         // para que no pueda regresar al menú con el botón atrás
                         popUpTo(0) { inclusive = true }
                     }
+                },
+                onNavigateToAgendarPartido = {
+                    navController.navigate("agendar_partido")
+                },
+                onNavigateToCanchas = {
+                    navController.navigate("canchas")
+                },
+                onNavigateToCalendario = {
+                    navController.navigate("calendario")
+                },
+                onNavigateToReporte = {
+                    navController.navigate("reporte")
+                }
+            )
+        }
+        // Pantalla de Agendar Partido
+        composable("agendar_partido") {
+            AgendarPartidoScreen(
+                onNavigateToAgendarPartido = {
+                    // Ya estamos en esta pantalla, podrías no hacer nada o recargar
+                    navController.navigate("agendar_partido") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCanchas = {
+                    navController.navigate("canchas") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCalendario = {
+                    navController.navigate("calendario") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToReporte = {
+                    navController.navigate("reporte") {
+                        launchSingleTop = true
+                    }
+                },
+                onCerrarSesion = {
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Pantalla de Canchas
+        composable("canchas") {
+            CanchasScreen(
+                onNavigateToAgendarPartido = {
+                    navController.navigate("agendar_partido") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCanchas = {
+                    // Ya estamos en esta pantalla
+                    navController.navigate("canchas") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCalendario = {
+                    navController.navigate("calendario") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToReporte = {
+                    navController.navigate("reporte") {
+                        launchSingleTop = true
+                    }
+                },
+                onCerrarSesion = {
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Pantalla de Calendario
+        composable("calendario") {
+            CalendarioScreen(
+                onNavigateToAgendarPartido = {
+                    navController.navigate("agendar_partido") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCanchas = {
+                    navController.navigate("canchas") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCalendario = {
+                    navController.navigate("calendario") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToReporte = {
+                    navController.navigate("reporte") {
+                        launchSingleTop = true
+                    }
+                },
+                onCerrarSesion = {
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Pantalla de Reporte
+        composable("reporte") {
+            ReporteScreen(
+                onNavigateToAgendarPartido = {
+                    navController.navigate("agendar_partido") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCanchas = {
+                    navController.navigate("canchas") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCalendario = {
+                    navController.navigate("calendario") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToReporte = {
+                    navController.navigate("reporte") {
+                        launchSingleTop = true
+                    }
+                },
+                onCerrarSesion = {
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }
     }
 }
+

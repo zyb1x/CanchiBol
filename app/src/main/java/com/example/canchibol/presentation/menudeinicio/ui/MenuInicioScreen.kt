@@ -21,7 +21,11 @@ import com.example.canchibol.ui.theme.*
 fun LayoutMenuInicio(
     modifier: Modifier,
     viewModel: MenuInicioViewModel = viewModel(),
-    onCerrarSesion: () -> Unit
+    onCerrarSesion: () -> Unit,
+    onNavigateToAgendarPartido: () -> Unit,
+    onNavigateToCanchas: () -> Unit,
+    onNavigateToCalendario: () -> Unit,
+    onNavigateToReporte: () -> Unit
 ) {
     val opcionSeleccionada by viewModel.opcionSeleccionada
 
@@ -32,8 +36,11 @@ fun LayoutMenuInicio(
             .padding(top = 80.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {Surface(
-        modifier = Modifier.height(130.dp).width(300.dp),
-        onClick = { viewModel.seleccionarOpcion("Agendar partido") },
+        modifier = Modifier
+            .height(130.dp)
+            .width(300.dp),
+        onClick = { viewModel.seleccionarOpcion("Agendar partido")
+                  onNavigateToAgendarPartido()},
         shadowElevation = 2.dp, shape = RoundedCornerShape(10.dp), color = LightGreen,
         ) {
             Box(
@@ -56,13 +63,15 @@ fun LayoutMenuInicio(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(38.dp))
-        Row {
+
+        Spacer(modifier = Modifier.height(10.dp))
+
             Surface(
                 modifier = Modifier
                     .height(130.dp)
-                    .width(130.dp),
-                onClick = { viewModel.seleccionarOpcion("Canchas") }, // ✅ conectado
+                    .width(300.dp),
+                onClick = { viewModel.seleccionarOpcion("Canchas")
+                          onNavigateToCanchas()}, // ✅ conectado
                 shadowElevation = 2.dp,
                 shape = RoundedCornerShape(10.dp),
                 color = MediumGreen
@@ -88,48 +97,16 @@ fun LayoutMenuInicio(
                 }
             }
 
-            Spacer(modifier = Modifier.width(38.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
+
+            //  Calendario
             Surface(
                 modifier = Modifier
                     .height(130.dp)
-                    .width(130.dp),
-                onClick = { viewModel.seleccionarOpcion("Registrar árbitro") }, // ✅ conectado
-                shadowElevation = 2.dp,
-                shape = RoundedCornerShape(10.dp),
-                color = LightGreen
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.arbitro_icon_dark),
-                        contentDescription = "Icono arbitro",
-                        modifier = Modifier
-                            .size(75.dp)
-                            .padding(bottom = 10.dp)
-                    )
-                    Text(
-                        text = "Registrar árbitro",
-                        modifier = Modifier.padding(top = 90.dp),
-                        color = DarkGreen,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(38.dp))
-
-        Row {
-            // 🔹 Calendario
-            Surface(
-                modifier = Modifier
-                    .height(130.dp)
-                    .width(130.dp),
-                onClick = { viewModel.seleccionarOpcion("Calendario") }, // ✅ conectado
+                    .width(300.dp),
+                onClick = { viewModel.seleccionarOpcion("Calendario")
+                          onNavigateToCalendario()}, // ✅ conectado
                 shadowElevation = 2.dp,
                 shape = RoundedCornerShape(10.dp),
                 color = LightGreen
@@ -154,12 +131,16 @@ fun LayoutMenuInicio(
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(38.dp))
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            //Reportr
             Surface(
                 modifier = Modifier
                     .height(130.dp)
-                    .width(130.dp),
-                onClick = { viewModel.seleccionarOpcion("Reporte") }, // ✅ conectado
+                    .width(300.dp),
+                onClick = { viewModel.seleccionarOpcion("Reporte")
+                          onNavigateToReporte()}, //  conectado
                 shadowElevation = 2.dp,
                 shape = RoundedCornerShape(10.dp),
                 color = MediumGreen
@@ -184,34 +165,28 @@ fun LayoutMenuInicio(
                     )
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(35.dp))
-        Column(
+        Spacer(modifier = Modifier.height(15.dp))
+
+
+        Button(
+            onClick = { onCerrarSesion() },
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 80.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .width(200.dp)
+                .height(50.dp),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MediumGreen,
+                contentColor = LightGreen
+            )
         ) {
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            Button(
-                onClick = { onCerrarSesion() },
-                modifier = Modifier
-                    .width(200.dp)
-                    .height(50.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MediumGreen,
-                    contentColor = LightGreen
-                )
-            ) {
-                Text("Cerrar sesión", fontSize = 16.sp)
-            }
+            Text("Cerrar sesión", fontSize = 16.sp)
         }
+        }
+
+
 
     }
-}
+
 
 private fun ColumnScope.onCerrarSesion() {
     TODO("Not yet implemented")

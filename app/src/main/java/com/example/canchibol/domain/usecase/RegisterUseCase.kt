@@ -17,7 +17,7 @@ class RegisterUseCase(
         noEmpleado: String
     ): Result<UserEntity> {
 
-        // Validación 1: Campos obligatorios
+        // Validación Campos obligatorios
         if (nombre.isBlank()) {
             return Result.failure(Exception("El nombre es obligatorio"))
         }
@@ -38,27 +38,27 @@ class RegisterUseCase(
             return Result.failure(Exception("Debes confirmar tu contraseña"))
         }
 
-        // Validación 2: Formato de email
+        // Validación Formato de email
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return Result.failure(Exception("El formato del email es inválido"))
         }
 
-        // Validación 3: Contraseñas coinciden
+        // Validación Contraseñas coinciden
         if (password != confirmPassword) {
             return Result.failure(Exception("Las contraseñas no coinciden"))
         }
 
-        // Validación 4: Longitud mínima de contraseña
+        // Validación Longitud mínima de contraseña
         if (password.length < 6) {
             return Result.failure(Exception("La contraseña debe tener al menos 6 caracteres"))
         }
 
-        // Validación 5: Número de empleado válido
+        // Validación Número de empleado válido
         if (noEmpleado.length < 3) {
             return Result.failure(Exception("El número de empleado debe tener al menos 3 dígitos"))
         }
 
-        // Validación 6: Número de empleado solo contiene dígitos
+        // Validación Número de empleado solo contiene dígitos
         if (!noEmpleado.all { it.isDigit() }) {
             return Result.failure(Exception("El número de empleado solo debe contener números"))
         }
