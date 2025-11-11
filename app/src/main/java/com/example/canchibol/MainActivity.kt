@@ -1,6 +1,7 @@
 package com.example.canchibol
 
 import android.os.Bundle
+import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -33,6 +34,7 @@ import com.example.canchibol.ui.theme.CanchiBolTheme
  * ✅ Las pantallas usan callbacks en lugar de observar estados del ViewModel
  */
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

@@ -1,5 +1,6 @@
 package com.example.canchibol.presentation.registro.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.compose.runtime.mutableStateOf
@@ -108,7 +109,9 @@ class RegistroViewModel(
 
 
             val result = registerUseCase(
-                nombre = nombreCompleto,
+                nombre = nombre.value.trim(),
+                apellidoPaterno = _apellidoPaterno.value.trim(),
+                apellidoMaterno = _apellidoMaterno.value.trim(),
                 email = _correo.value.trim(),
                 password = _contrasenia.value,
                 confirmPassword = _confirmarContrasenia.value,

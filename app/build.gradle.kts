@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.compose.runtime.livedata)
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation(libs.androidx.material3)
+    implementation("com.android.volley:volley:1.2.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

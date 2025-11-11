@@ -11,6 +11,8 @@ class RegisterUseCase(
 
     suspend operator fun invoke(
         nombre: String,
+        apellidoPaterno: String,
+        apellidoMaterno: String,
         email: String,
         password: String,
         confirmPassword: String,
@@ -26,9 +28,9 @@ class RegisterUseCase(
             return Result.failure(Exception("El correo es obligatorio"))
         }
 
-        if (noEmpleado.isBlank()) {
-            return Result.failure(Exception("El número de empleado es obligatorio"))
-        }
+//        if (noEmpleado.isBlank()) {
+//            return Result.failure(Exception("El número de empleado es obligatorio"))
+//        }
 
         if (password.isBlank()) {
             return Result.failure(Exception("La contraseña es obligatoria"))
@@ -54,21 +56,23 @@ class RegisterUseCase(
         }
 
         // Validación Número de empleado válido
-        if (noEmpleado.length < 3) {
-            return Result.failure(Exception("El número de empleado debe tener al menos 3 dígitos"))
-        }
+//        if (noEmpleado.length < 3) {
+//            return Result.failure(Exception("El número de empleado debe tener al menos 3 dígitos"))
+//        }
 
-        // Validación Número de empleado solo contiene dígitos
-        if (!noEmpleado.all { it.isDigit() }) {
-            return Result.failure(Exception("El número de empleado solo debe contener números"))
-        }
+//        // Validación Número de empleado solo contiene dígitos
+//        if (!noEmpleado.all { it.isDigit() }) {
+//            return Result.failure(Exception("El número de empleado solo debe contener números"))
+//        }
 
         // Todas las validaciones pasaron, delegar al repository
         return try {
             authRepository.register(
+                nombre = nombre,
+                apellidoPaterno = apellidoPaterno,
+                apellidoMaterno = apellidoMaterno,
                 email = email,
-                password = password,
-                nombre = nombre
+                password = password
             )
         } catch (e: Exception) {
             Result.failure(Exception("Error al registrar: ${e.message}"))

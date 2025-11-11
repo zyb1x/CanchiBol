@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -31,10 +32,12 @@ import com.example.canchibol.ui.theme.*
 @Composable
 fun LayoutRegistro(
     modifier: Modifier = Modifier,
-    viewModel: RegistroViewModel = viewModel(factory = RegistroViewModelFactory()),
+    viewModel: RegistroViewModel = viewModel(factory = RegistroViewModelFactory(LocalContext.current)),
     onVolverLogin: () -> Unit,
     onRegistroExitoso: () -> Unit
 ) {
+
+    val context = LocalContext.current
 
     val nombre by viewModel.nombre
     val apellidoPaterno by viewModel.apellidoPaterno

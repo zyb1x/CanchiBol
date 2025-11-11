@@ -1,84 +1,75 @@
 package com.example.canchibol.data.repository
 
+import android.content.Context
+import com.example.canchibol.data.network.ApiService
 import com.example.canchibol.domain.entity.UserEntity
 import com.example.canchibol.domain.repository.AuthRepository
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Implementación del repositorio de autenticación
  * Esta clase maneja la lógica de acceso a datos (API, Base de datos, etc.)
  */
-class AuthRepositoryImpl : AuthRepository {
-
-    // Aquí irían tus servicios de API, Room, SharedPreferences, etc.
-    // private val apiService: AuthApiService
-    // private val userDao: UserDao
-    // private val sharedPreferences: SharedPreferences
+class AuthRepositoryImpl(private val context: Context) : AuthRepository {
 
     override suspend fun login(email: String, password: String): Result<UserEntity> {
         return try {
-            // Simulación de llamada a API (reemplazar con tu implementación real)
-            delay(1000) // Simular latencia de red
+            // TODO: Implementar login cuando lo necesites
+            // Por ahora devolvemos un error o un usuario temporal
+            Result.failure(Exception("Login no implementado aún"))
 
-            // TEMPORAL: Validación hardcodeada (reemplazar con llamada real a tu backend)
-            if (email == "chiwised@gmail.com" && password == "12345") {
-                val user = UserEntity(
+            /* Para implementar después:
+            val success = ApiService.loginUser(context, email, password)
+            if (success) {
+                Result.success(UserEntity(
                     id = "1",
                     email = email,
-                    nombre = "Usuario Demo",
-                    token = "token_123456"
-                )
-                Result.success(user)
+                    nombre = "Usuario Logeado",
+                    token = "token_temp"
+                ))
             } else {
                 Result.failure(Exception("Credenciales incorrectas"))
             }
-
-            /* Implementación REAL con Retrofit:
-            val response = apiService.login(LoginRequest(email, password))
-            if (response.isSuccessful && response.body() != null) {
-                val userDto = response.body()!!
-                val userEntity = userDto.toDomain() // Mapear DTO a Entity
-                // Guardar token en SharedPreferences
-                sharedPreferences.edit().putString("auth_token", userEntity.token).apply()
-                Result.success(userEntity)
-            } else {
-                Result.failure(Exception("Error en el servidor: ${response.code()}"))
-            }
             */
-
         } catch (e: Exception) {
             Result.failure(Exception("Error de conexión: ${e.message}"))
         }
     }
 
-    override suspend fun register(email: String, password: String, nombre: String): Result<UserEntity> {
+    override suspend fun register(
+        email: String,
+        password: String,
+        nombre: String,
+        apellidoPaterno: String,
+        apellidoMaterno: String
+    ): Result<UserEntity> {
         return try {
-            // Simulación de llamada a API (reemplazar con tu implementación real)
-            delay(1500) // Simular latencia de red
+            // Usar withContext para ejecutar en el hilo de IO
+            withContext(Dispatchers.IO) {
+                val success = ApiService.registerUser(
+                    context = context,
+                    nombre = nombre,
+                    apellidoPaterno = apellidoPaterno,
+                    apellidoMaterno = apellidoMaterno,
+                    correo = email,
+                    contrasenia = password
+                )
 
-            // TEMPORAL: Simulación de registro exitoso
-            // En un proyecto real, aquí harías la llamada a tu backend
-            val user = UserEntity(
-                id = "user_${System.currentTimeMillis()}", // ID único
-                email = email,
-                nombre = nombre,
-                token = "token_${System.currentTimeMillis()}"
-            )
-
-            /* Implementación REAL con Retrofit:
-            val response = apiService.register(RegisterRequest(email, password, nombre))
-            if (response.isSuccessful && response.body() != null) {
-                val userDto = response.body()!!
-                val userEntity = userDto.toDomain()
-                // Guardar token en SharedPreferences
-                sharedPreferences.edit().putString("auth_token", userEntity.token).apply()
-                Result.success(userEntity)
-            } else {
-                Result.failure(Exception("Error al registrar: ${response.code()}"))
+                if (success) {
+                    // Crear un UserEntity con los datos registrados
+                    Result.success(
+                        UserEntity(
+                            id = "temp_id", // Tu API no devuelve ID, podrías usar el email como referencia
+                            email = email,
+                            nombre = "$nombre $apellidoPaterno $apellidoMaterno",
+                            token = "token_generado" // Podrías generar un token temporal
+                        )
+                    )
+                } else {
+                    Result.failure(Exception("Error al registrar el usuario en el servidor"))
+                }
             }
-            */
-
-            Result.success(user)
         } catch (e: Exception) {
             Result.failure(Exception("Error de conexión: ${e.message}"))
         }
@@ -86,8 +77,7 @@ class AuthRepositoryImpl : AuthRepository {
 
     override suspend fun logout(): Result<Unit> {
         return try {
-            // Limpiar SharedPreferences, cerrar sesión en backend, etc.
-            // sharedPreferences.edit().clear().apply()
+            // Limpiar cualquier dato de sesión local
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -95,8 +85,7 @@ class AuthRepositoryImpl : AuthRepository {
     }
 
     override suspend fun isUserLoggedIn(): Boolean {
-        // Verificar si existe token guardado
-        // return sharedPreferences.getString("auth_token", null) != null
+        // Verificar si hay una sesión activa (por implementar)
         return false
     }
 }

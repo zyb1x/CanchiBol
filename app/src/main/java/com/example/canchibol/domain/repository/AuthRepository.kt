@@ -12,7 +12,13 @@ interface AuthRepository {
     /**
      * Registra un nuevo usuario
      */
-    suspend fun register(email: String, password: String, nombre: String): Result<UserEntity>
+    suspend fun register(
+        email: String,
+        password: String,
+        nombre: String,
+        apellidoPaterno: String,
+        apellidoMaterno: String
+    ): Result<UserEntity>
 
     /**
      * Cierra la sesión del usuario actual

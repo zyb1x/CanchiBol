@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,9 @@ import com.example.canchibol.ui.theme.*
 @Composable
 fun LayoutIniciarSesion(
     modifier: Modifier = Modifier,
-    viewModel: InicioDeSesionViewModel = viewModel(factory = InicioDeSesionViewModelFactory()),
+    viewModel: InicioDeSesionViewModel = viewModel(factory = InicioDeSesionViewModelFactory(
+        LocalContext.current
+    )),
     onIrARegistro: () -> Unit,
     onLoginExitoso: () -> Unit
 ) {
