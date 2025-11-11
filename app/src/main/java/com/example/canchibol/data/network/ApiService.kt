@@ -12,7 +12,7 @@ import kotlin.coroutines.resumeWithException
 object ApiService {
 
     // Cambia esta IP por tu IP local
-    private const val BASE_URL = "http://192.168.137.110/android_database_canchibol/"
+    private const val BASE_URL = "http://172.16.100.73/android_database_canchibol/"
 
     suspend fun registerUser(
         context: Context,
