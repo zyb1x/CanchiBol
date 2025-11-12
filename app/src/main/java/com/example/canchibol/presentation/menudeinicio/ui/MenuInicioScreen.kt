@@ -165,14 +165,15 @@ fun LayoutMenuInicio(
                     )
                 }
             }
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(100.dp))
 
 
         Button(
             onClick = { onCerrarSesion() },
             modifier = Modifier
                 .width(200.dp)
-                .height(50.dp),
+                .height(50.dp)
+                ,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MediumGreen,

@@ -7,31 +7,35 @@ import com.example.canchibol.domain.repository.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * Implementación del repositorio de autenticación
- * Esta clase maneja la lógica de acceso a datos (API, Base de datos, etc.)
- */
 class AuthRepositoryImpl(private val context: Context) : AuthRepository {
 
     override suspend fun login(email: String, password: String): Result<UserEntity> {
         return try {
-            // TODO: Implementar login cuando lo necesites
-            // Por ahora devolvemos un error o un usuario temporal
-            Result.failure(Exception("Login no implementado aún"))
+            withContext(Dispatchers.IO) {
+                val result = ApiService.loginUser(context, email, password)
 
-            /* Para implementar después:
-            val success = ApiService.loginUser(context, email, password)
-            if (success) {
-                Result.success(UserEntity(
-                    id = "1",
-                    email = email,
-                    nombre = "Usuario Logeado",
-                    token = "token_temp"
-                ))
-            } else {
-                Result.failure(Exception("Credenciales incorrectas"))
+                if (result.isSuccess) {
+                    val loginResponse = result.getOrNull()
+                    if (loginResponse?.success == true && loginResponse.user != null) {
+                        val user = loginResponse.user
+                        Result.success(
+                            UserEntity(
+                                id = user.numEmpleado,
+                                email = user.correo,
+                                nombre = "${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}",
+
+                                token = "token_${user.numEmpleado}" //Genera tokern real
+                            )
+                        )
+                    } else {
+                        Result.failure(Exception(loginResponse?.message ?:
+                        "Error desconocido"))
+                    }
+                } else {
+                    Result.failure(result.exceptionOrNull() ?: Exception
+                        ("Error de login"))
+                }
             }
-            */
         } catch (e: Exception) {
             Result.failure(Exception("Error de conexión: ${e.message}"))
         }
@@ -45,7 +49,6 @@ class AuthRepositoryImpl(private val context: Context) : AuthRepository {
         apellidoMaterno: String
     ): Result<UserEntity> {
         return try {
-            // Usar withContext para ejecutar en el hilo de IO
             withContext(Dispatchers.IO) {
                 val success = ApiService.registerUser(
                     context = context,
@@ -57,17 +60,17 @@ class AuthRepositoryImpl(private val context: Context) : AuthRepository {
                 )
 
                 if (success) {
-                    // Crear un UserEntity con los datos registrados
                     Result.success(
                         UserEntity(
-                            id = "temp_id", // Tu API no devuelve ID, podrías usar el email como referencia
+                            id = "temp_id",
                             email = email,
                             nombre = "$nombre $apellidoPaterno $apellidoMaterno",
-                            token = "token_generado" // Podrías generar un token temporal
+                            token = "token_generado"
                         )
                     )
                 } else {
-                    Result.failure(Exception("Error al registrar el usuario en el servidor"))
+                    Result.failure(Exception
+                        ("Error al registrar el usuario en el servidor"))
                 }
             }
         } catch (e: Exception) {
@@ -77,7 +80,7 @@ class AuthRepositoryImpl(private val context: Context) : AuthRepository {
 
     override suspend fun logout(): Result<Unit> {
         return try {
-            // Limpiar cualquier dato de sesión local
+            // Aquí luego podrías limpiar SharedPreferences o DataStore
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -85,7 +88,7 @@ class AuthRepositoryImpl(private val context: Context) : AuthRepository {
     }
 
     override suspend fun isUserLoggedIn(): Boolean {
-        // Verificar si hay una sesión activa (por implementar)
+        // Por implementar - verificar si hay usuario logeado
         return false
     }
 }
