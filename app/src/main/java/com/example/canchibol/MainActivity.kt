@@ -32,7 +32,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             CanchiBolTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AppNavigation(modifier = Modifier.padding(innerPadding))
+                    //AppNavigation(modifier = Modifier.padding(innerPadding))
+                    CalendarioScreen(onNavigateToAgendarPartido = { /* no hacer nada */ },
+                        onNavigateToCanchas = { /* no hacer nada */ },
+                        onNavigateToCalendario = { /* no hacer nada */ },
+                        onNavigateToReporte = { /* no hacer nada */ },
+                        onCerrarSesion = { /* no hacer nada */ })
                 }
             }
         }
