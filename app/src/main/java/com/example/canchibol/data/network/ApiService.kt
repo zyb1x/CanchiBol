@@ -2,19 +2,29 @@
 package com.example.canchibol.data.network
 
 import android.content.Context
+import android.util.JsonReader
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.canchibol.data.network.dto.PartidoDto
+import com.example.canchibol.data.network.dto.PartidoResponse
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import org.json.JSONObject
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
+import java.io.StringReader
+import java.net.URLEncoder
+
 
 object ApiService {
 
-    // Cambia esta IP por tu IP local
-    private const val BASE_URL = "http://192.168.137.51/android_database_canchibol/"
+    // Cambia esta ip por la ip local
+    private const val BASE_URL = "http://192.168.137.116/android_database_canchibol/"
 
     suspend fun registerUser(
         context: Context,
@@ -135,6 +145,88 @@ object ApiService {
 
         Volley.newRequestQueue(context).add(stringRequest)
     }
+
+    suspend fun getPartidosPorFecha(context: Context, fecha: String): Result<PartidoResponse> {
+        return try {
+            // CODIFICAR LA FECHA
+            val encodedFecha = URLEncoder.encode(fecha, "UTF-8")
+            val url = "$BASE_URL/get_partidos.php?fecha=$encodedFecha"
+
+            println("DEBUG: URL: $url")
+
+            val request = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+            request.requestMethod = "GET"
+            request.connectTimeout = 10000
+            request.readTimeout = 10000
+
+
+            request.setRequestProperty("Accept-Charset", "UTF-8")
+            request.setRequestProperty("Content-Type", "application/json; charset=utf-8")
+
+            val responseCode = request.responseCode
+            println("DEBUG: Response Code: $responseCode")
+
+            val responseBody = if (responseCode == 200) {
+
+                request.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            } else {
+                request.errorStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } ?: "No error body"
+            }
+
+            println("DEBUG: Raw Response: '$responseBody'")
+
+            if (responseCode == 200) {
+                val cleanedResponse = responseBody.trim()
+
+                try {
+
+                    val gson = GsonBuilder()
+                        .setLenient()
+                        .create()
+
+                    val partidoResponse = gson.fromJson(cleanedResponse, PartidoResponse::class.java)
+                    Result.success(partidoResponse)
+                } catch (e: Exception) {
+                    println("DEBUG: Gson Error: ${e.message}")
+                    Result.failure(Exception("Error parsing JSON: ${e.message}"))
+                }
+            } else {
+                Result.failure(Exception("Error HTTP $responseCode: $responseBody"))
+            }
+        } catch (e: Exception) {
+            println("DEBUG: Network Exception: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
+
+    private fun parsePartidoResponseManual(json: String): PartidoResponse {
+        return try {
+            // Buscar los campos básicos en el JSON
+            val success = """"success":\s*true""".toRegex().containsMatchIn(json)
+            val partidos = mutableListOf<PartidoDto>()
+
+            // Buscar array de partidos
+            val partidoMatches = """\{"titular":"[^"]*","equipo1":"[^"]*","equipo2":"[^"]*","fecha":"[^"]*","hora":"[^"]*","cancha":"[^"]*"\}""".toRegex().findAll(json)
+
+            partidoMatches.forEach { match ->
+                val partidoJson = match.value
+                val titular = """"titular":"([^"]*)"""".toRegex().find(partidoJson)?.groupValues?.get(1) ?: ""
+                val equipo1 = """"equipo1":"([^"]*)"""".toRegex().find(partidoJson)?.groupValues?.get(1) ?: ""
+                val equipo2 = """"equipo2":"([^"]*)"""".toRegex().find(partidoJson)?.groupValues?.get(1) ?: ""
+                val fecha = """"fecha":"([^"]*)"""".toRegex().find(partidoJson)?.groupValues?.get(1) ?: ""
+                val hora = """"hora":"([^"]*)"""".toRegex().find(partidoJson)?.groupValues?.get(1) ?: ""
+                val cancha = """"cancha":"([^"]*)"""".toRegex().find(partidoJson)?.groupValues?.get(1) ?: ""
+
+                partidos.add(PartidoDto(titular, equipo1, equipo2, fecha, hora, cancha))
+            }
+
+            PartidoResponse(success = success, partidos = partidos, message = null)
+        } catch (e: Exception) {
+            PartidoResponse(success = false, partidos = emptyList(), message = "Error parsing manually")
+        }
+    }
+
 }
 
 // Modelos de respuesta para el login

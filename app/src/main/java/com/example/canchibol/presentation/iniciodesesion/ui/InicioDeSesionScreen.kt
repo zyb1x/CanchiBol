@@ -26,15 +26,7 @@ import com.example.canchibol.presentation.iniciodesesion.viewmodel.InicioDeSesio
 import com.example.canchibol.presentation.iniciodesesion.viewmodel.InicioDeSesionViewModelFactory
 import com.example.canchibol.ui.theme.*
 
-/**
- * Pantalla de Inicio de Sesión
- *
- * PARÁMETROS:
- * @param modifier Modificador de Compose
- * @param viewModel ViewModel con Factory (inyección de dependencias)
- * @param onIrARegistro Callback para navegar a la pantalla de registro
- * @param onLoginExitoso Callback que se ejecuta cuando el login es exitoso
- */
+
 @Composable
 fun LayoutIniciarSesion(
     modifier: Modifier = Modifier,

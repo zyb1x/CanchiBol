@@ -176,7 +176,7 @@ fun CanchasScreen(
                 )
             }
         ) { innerPadding ->
-            // ✅ Aquí va TU contenido específico de Canchas
+
             Box(
                 modifier = Modifier
                     .padding(innerPadding)

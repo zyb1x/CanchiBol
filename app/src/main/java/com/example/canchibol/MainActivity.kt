@@ -1,10 +1,12 @@
 package com.example.canchibol
 
+import android.os.Build
 import android.os.Bundle
 import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -26,18 +28,19 @@ import com.example.canchibol.ui.theme.CanchiBolTheme
 
 class MainActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             CanchiBolTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    //AppNavigation(modifier = Modifier.padding(innerPadding))
-                    CalendarioScreen(onNavigateToAgendarPartido = { /* no hacer nada */ },
+                    AppNavigation(modifier = Modifier.padding(innerPadding))
+                   /* CalendarioScreen(onNavigateToAgendarPartido = { /* no hacer nada */ },
                         onNavigateToCanchas = { /* no hacer nada */ },
                         onNavigateToCalendario = { /* no hacer nada */ },
                         onNavigateToReporte = { /* no hacer nada */ },
-                        onCerrarSesion = { /* no hacer nada */ })
+                        onCerrarSesion = { /* no hacer nada */ })*/
                 }
             }
         }
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
@@ -238,6 +242,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 onCerrarSesion = {
                     navController.navigate("login") {
                         popUpTo(0) { inclusive = true }
+                    }
+                },
+                onNavigateToInicio = {
+                    navController.navigate("menu"){
+                        launchSingleTop = true
                     }
                 }
             )

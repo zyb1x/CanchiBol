@@ -1,11 +1,14 @@
 package com.example.canchibol.presentation.calendario.ui
 
 import android.icu.text.SimpleDateFormat
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -33,6 +36,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,9 +45,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentDataType.Companion.Date
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.canchibol.presentation.calendario.ui.components.PartidosList
+import com.example.canchibol.presentation.calendario.viewmodel.CalendarioViewModel
+import com.example.canchibol.presentation.calendario.viewmodel.CalendarioViewModelFactory
 import com.example.canchibol.ui.theme.DarkGreen
 import com.example.canchibol.ui.theme.LightGreen
 import com.example.canchibol.ui.theme.MediumGreen
@@ -51,6 +60,8 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
 
+
+@RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarioScreen(
@@ -58,13 +69,17 @@ fun CalendarioScreen(
     onNavigateToCanchas: () -> Unit,
     onNavigateToCalendario: () -> Unit,
     onNavigateToReporte: () -> Unit,
-    onCerrarSesion: () -> Unit
+    onCerrarSesion: () -> Unit,
+    onNavigateToInicio: () -> Unit
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    var showDatePicker by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<Long?>(null) }
+    val context = LocalContext.current
+    val viewModel: CalendarioViewModel = viewModel(
+        factory = CalendarioViewModelFactory(context))
+
+    val uiState by viewModel.uiState.collectAsState()
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -84,36 +99,29 @@ fun CalendarioScreen(
                     HorizontalDivider()
 
                     Text(
-                        "Principal",
+                        "Navegación",
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.titleMedium,
                         color = DarkGreen
                     )
 
+                    // Opción: Inicio
                     NavigationDrawerItem(
-                        label = { Text("Agendar Partido") },
+                        label = { Text("Inicio") },
                         selected = false,
                         onClick = {
                             scope.launch { drawerState.close() }
-                            onNavigateToAgendarPartido()
+                            onNavigateToInicio()
                         }
                     )
 
-                    NavigationDrawerItem(
-                        label = { Text("Canchas") },
-                        selected = false,
-                        onClick = {
-                            scope.launch { drawerState.close() }
-                            onNavigateToCanchas()
-                        }
-                    )
 
                     NavigationDrawerItem(
                         label = { Text("Calendario") },
-                        selected = true, // Esta pantalla está activa
+                        selected = true,
                         onClick = {
                             scope.launch { drawerState.close() }
-                            onNavigateToCalendario()
+
                         },
                         colors = NavigationDrawerItemDefaults.colors(
                             selectedContainerColor = LightGreen,
@@ -121,23 +129,15 @@ fun CalendarioScreen(
                         )
                     )
 
-                    NavigationDrawerItem(
-                        label = { Text("Reporte") },
-                        selected = false,
-                        onClick = {
-                            scope.launch { drawerState.close() }
-                            onNavigateToReporte()
-                        }
-                    )
-
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                     Text(
-                        "Configuración",
+                        "Sesión",
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.titleMedium,
                         color = DarkGreen
                     )
+
 
                     NavigationDrawerItem(
                         label = { Text("Cerrar Sesión") },
@@ -193,7 +193,7 @@ fun CalendarioScreen(
                 )
             }
         ) { innerPadding ->
-            // ✅ Aquí va TU contenido específico de Calendario
+            //contenido
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -201,17 +201,17 @@ fun CalendarioScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // ✅ Botón para abrir el DatePicker
+                // boton DatePicker
                 TextButton(
-                    onClick = { showDatePicker = true }
+                    onClick = { viewModel.showDatePicker()  }
                 ) {
                     Text("Seleccionar Fecha")
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // ✅ Label que muestra la fecha seleccionada
-                if (selectedDate != null) {
+                //label que muestra la fecha seleccionada
+                if (uiState.selectedDate != null) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             "Fecha seleccionada:",
@@ -222,10 +222,20 @@ fun CalendarioScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            formatDate(selectedDate!!),
+                            formatDate(uiState.selectedDate!!),
                             style = MaterialTheme.typography.headlineSmall,
                             color = DarkGreen,
                             fontWeight = FontWeight.Bold
+                        )
+
+                        // Lista de partidos
+                        PartidosList(
+                            partidos = uiState.partidos,
+                            isLoading = uiState.isLoading,
+                            error = uiState.error,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
                         )
                     }
                 } else {
@@ -237,15 +247,15 @@ fun CalendarioScreen(
                 }
             }
 
-            // ✅ Mostrar el DatePicker cuando showDatePicker sea true
-            if (showDatePicker) {
+
+
+            if (uiState.showDatePicker) {
                 DatePickerModal(
                     onDateSelected = { date ->
-                        selectedDate = date // ✅ Guardar la fecha seleccionada
-                        showDatePicker = false
+                        viewModel.onDateSelected(date)
                     },
                     onDismiss = {
-                        showDatePicker = false
+                        viewModel.hideDatePicker()
                     }
                 )
             }
@@ -281,21 +291,13 @@ fun DatePickerModal(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
 fun formatDate(timestamp: Long): String {
     val date = Date(timestamp)
-    val formatter = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale("es", "ES"))
+    val formatter = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale
+        ("es", "ES"))
     return formatter.format(date)
 }
 
-// ✅ Preview para testing
-@Preview(showBackground = true)
-@Composable
-fun CalendarioScreenPreview() {
-    CalendarioScreen(
-        onNavigateToAgendarPartido = { },
-        onNavigateToCanchas = { },
-        onNavigateToCalendario = { },
-        onNavigateToReporte = { },
-        onCerrarSesion = { }
-    )
-}
+
+
