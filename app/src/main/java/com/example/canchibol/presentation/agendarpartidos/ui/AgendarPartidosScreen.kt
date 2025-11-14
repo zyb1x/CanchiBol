@@ -117,7 +117,7 @@ fun AgendarPartidoScreen(
 
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                    // Sección de Configuración
+                    // Sección de Configuracion
                     Text(
                         "Configuración",
                         modifier = Modifier.padding(16.dp),
