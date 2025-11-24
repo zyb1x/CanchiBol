@@ -2,7 +2,6 @@ package com.example.canchibol
 
 import android.os.Build
 import android.os.Bundle
-import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,16 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.canchibol.presentation.agendarpartido.ui.AgendarPartidoScreen
 import com.example.canchibol.presentation.calendario.ui.CalendarioScreen
-import com.example.canchibol.presentation.canchas.ui.CanchasScreen
 import com.example.canchibol.presentation.inicio.ui.LayoutInicio
 import com.example.canchibol.presentation.iniciodesesion.ui.LayoutIniciarSesion
+import com.example.canchibol.presentation.perfil.ui.PerfilScreen
+import com.example.canchibol.presentation.proximospartidos.ui.ProximosPartidosScreen
 import com.example.canchibol.presentation.registro.ui.LayoutRegistro
-import com.example.canchibol.presentation.reporte.ui.ReporteScreen
-import com.example.canchibol.proyecto.menudinicio.layouts.ui.LayoutMenuInicio
+import com.example.canchibol.presentation.menudeinicio.ui.LayoutMenuInicio
 import com.example.canchibol.ui.theme.CanchiBolTheme
-
 
 class MainActivity : ComponentActivity() {
 
@@ -36,17 +33,11 @@ class MainActivity : ComponentActivity() {
             CanchiBolTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     AppNavigation(modifier = Modifier.padding(innerPadding))
-                   /* CalendarioScreen(onNavigateToAgendarPartido = { /* no hacer nada */ },
-                        onNavigateToCanchas = { /* no hacer nada */ },
-                        onNavigateToCalendario = { /* no hacer nada */ },
-                        onNavigateToReporte = { /* no hacer nada */ },
-                        onCerrarSesion = { /* no hacer nada */ })*/
                 }
             }
         }
     }
 }
-
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -55,233 +46,75 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
     NavHost(
         navController = navController,
-        startDestination = "inicio", // Pantalla inicial
+        startDestination = "inicio",
         modifier = modifier
     ) {
 
-        // PANTALLA DE INICIO/BIENVENIDA
-
-        composable("inicio") {
+        composable("inicio") { backStackEntry ->
             LayoutInicio(
                 modifier = Modifier.fillMaxSize(),
-
-                onNavigateToLogin = {
-                    navController.navigate("login") {
-                        // Opcional: eliminar "inicio" del back stack
-                        // para que el botón atrás no regrese aquí
-                        popUpTo("inicio") { inclusive = true }
-                    }
-                },
-
-                onNavigateToRegister = {
-                    navController.navigate("registro") {
-                        // Opcional: eliminar "inicio" del back stack
-                        popUpTo("inicio") { inclusive = true }
-                    }
-                }
+                onNavigateToLogin = { navController.navigate("login") { popUpTo("inicio") { inclusive = true } } },
+                onNavigateToRegister = { navController.navigate("registro") { popUpTo("inicio") { inclusive = true } } }
             )
         }
 
-
-        // PANTALLA DE LOGIN
-
-        composable("login") {
+        composable("login") { backStackEntry ->
             LayoutIniciarSesion(
                 modifier = Modifier.fillMaxSize(),
-
-                onIrARegistro = {
-                    navController.navigate("registro")
-                },
-
-                onLoginExitoso = {
-                    navController.navigate("menu") {
-                        // Limpiar el back stack para que el botón atrás
-                        // NO regrese a login después de iniciar sesión
-                        popUpTo("login") { inclusive = true }
-                    }
-                }
+                onIrARegistro = { navController.navigate("registro") },
+                onLoginExitoso = { navController.navigate("menu") { popUpTo("login") { inclusive = true } } }
             )
         }
 
-
-        // PANTALLA DE REGISTRO
-
-        composable("registro") {
+        composable("registro") { backStackEntry ->
             LayoutRegistro(
                 modifier = Modifier.fillMaxSize(),
-
-                onVolverLogin = {
-
-                    navController.popBackStack()
-                },
-
-                onRegistroExitoso = {
-                    navController.navigate("login") {
-                        // Eliminar "registro" del back stack
-                        popUpTo("registro") { inclusive = true }
-                    }
-                },
-
+                onVolverLogin = { navController.popBackStack() },
+                onRegistroExitoso = { navController.navigate("login") { popUpTo("registro") { inclusive = true } } },
             )
         }
 
+        val onNavigateTo: (String) -> Unit = { route -> navController.navigate(route) { launchSingleTop = true } }
+        val onLogout: () -> Unit = { navController.navigate("login") { popUpTo(0) { inclusive = true } } }
 
-        // PANTALLA DE MENU PRINCIPAL
-
-        composable("menu") {
+        composable("menu") { backStackEntry ->
             LayoutMenuInicio(
-                modifier = Modifier.fillMaxSize(),
-
-                onCerrarSesion = {
-                    navController.navigate("login") {
-
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
-                onNavigateToAgendarPartido = {
-                    navController.navigate("agendar_partido")
-                },
-                onNavigateToCanchas = {
-                    navController.navigate("canchas")
-                },
-                onNavigateToCalendario = {
-                    navController.navigate("calendario")
-                },
-                onNavigateToReporte = {
-                    navController.navigate("reporte")
-                }
-            )
-        }
-        // Pantalla de Agendar Partido
-        composable("agendar_partido") {
-            AgendarPartidoScreen(
-                onNavigateToAgendarPartido = {
-
-                    navController.navigate("agendar_partido") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCanchas = {
-                    navController.navigate("canchas") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCalendario = {
-                    navController.navigate("calendario") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToReporte = {
-                    navController.navigate("reporte") {
-                        launchSingleTop = true
-                    }
-                },
-                onCerrarSesion = {
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
+                onNavigateToInicio = { onNavigateTo("menu") },
+                onNavigateToPerfil = { onNavigateTo("perfil") },
+                onNavigateToProximosPartidos = { onNavigateTo("proximos_partidos") },
+                onNavigateToCalendario = { onNavigateTo("calendario") },
+                onCerrarSesion = onLogout
             )
         }
 
-        // Pantalla de Canchas
-        composable("canchas") {
-            CanchasScreen(
-                onNavigateToAgendarPartido = {
-                    navController.navigate("agendar_partido") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCanchas = {
-                    // Ya estamos en esta pantalla
-                    navController.navigate("canchas") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCalendario = {
-                    navController.navigate("calendario") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToReporte = {
-                    navController.navigate("reporte") {
-                        launchSingleTop = true
-                    }
-                },
-                onCerrarSesion = {
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
+        composable("perfil") { backStackEntry ->
+            PerfilScreen(
+                onNavigateToInicio = { onNavigateTo("menu") },
+                onNavigateToPerfil = { onNavigateTo("perfil") },
+                onNavigateToProximosPartidos = { onNavigateTo("proximos_partidos") },
+                onNavigateToCalendario = { onNavigateTo("calendario") },
+                onCerrarSesion = onLogout
             )
         }
 
-        // Pantalla de Calendario
-        composable("calendario") {
+        composable("proximos_partidos") { backStackEntry ->
+            ProximosPartidosScreen(
+                onNavigateToInicio = { onNavigateTo("menu") },
+                onNavigateToPerfil = { onNavigateTo("perfil") },
+                onNavigateToProximosPartidos = { onNavigateTo("proximos_partidos") },
+                onNavigateToCalendario = { onNavigateTo("calendario") },
+                onCerrarSesion = onLogout
+            )
+        }
+
+        composable("calendario") { backStackEntry ->
             CalendarioScreen(
-                onNavigateToAgendarPartido = {
-                    navController.navigate("agendar_partido") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCanchas = {
-                    navController.navigate("canchas") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCalendario = {
-                    navController.navigate("calendario") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToReporte = {
-                    navController.navigate("reporte") {
-                        launchSingleTop = true
-                    }
-                },
-                onCerrarSesion = {
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
-                onNavigateToInicio = {
-                    navController.navigate("menu"){
-                        launchSingleTop = true
-                    }
-                }
-            )
-        }
-
-        // Pantalla de Reporte
-        composable("reporte") {
-            ReporteScreen(
-                onNavigateToAgendarPartido = {
-                    navController.navigate("agendar_partido") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCanchas = {
-                    navController.navigate("canchas") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCalendario = {
-                    navController.navigate("calendario") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToReporte = {
-                    navController.navigate("reporte") {
-                        launchSingleTop = true
-                    }
-                },
-                onCerrarSesion = {
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
+                onNavigateToInicio = { onNavigateTo("menu") },
+                onNavigateToPerfil = { onNavigateTo("perfil") },
+                onNavigateToProximosPartidos = { onNavigateTo("proximos_partidos") },
+                onNavigateToCalendario = { onNavigateTo("calendario") },
+                onCerrarSesion = onLogout
             )
         }
     }
 }
-

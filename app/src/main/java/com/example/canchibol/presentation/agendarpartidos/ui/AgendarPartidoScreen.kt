@@ -1,4 +1,4 @@
-package com.example.canchibol.presentation.canchas.ui
+package com.example.canchibol.presentation.agendarpartido.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CanchasScreen(
+fun AgendarPartidoScreen(
     onNavigateToInicio: () -> Unit,
     onNavigateToPerfil: () -> Unit,
     onNavigateToProximosPartidos: () -> Unit,
@@ -75,15 +75,15 @@ fun CanchasScreen(
                     
                     NavigationDrawerItem(
                         label = { Text("Agendar Partido") },
-                        selected = false,
-                        onClick = { scope.launch { drawerState.close() }; onNavigateToAgendarPartido() }
+                        selected = true,
+                        onClick = { scope.launch { drawerState.close() }; onNavigateToAgendarPartido() },
+                        colors = NavigationDrawerItemDefaults.colors(selectedContainerColor = LightGreen)
                     )
                     
                     NavigationDrawerItem(
                         label = { Text("Canchas") },
-                        selected = true,
-                        onClick = { scope.launch { drawerState.close() }; onNavigateToCanchas() },
-                        colors = NavigationDrawerItemDefaults.colors(selectedContainerColor = LightGreen)
+                        selected = false,
+                        onClick = { scope.launch { drawerState.close() }; onNavigateToCanchas() }
                     )
                     
                     NavigationDrawerItem(
@@ -129,7 +129,7 @@ fun CanchasScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Canchas", color = LightGreen) },
+                    title = { Text("Agendar Partido", color = LightGreen) },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { if (drawerState.isClosed) drawerState.open() else drawerState.close() } }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menú", tint = LightGreen)
@@ -146,7 +146,7 @@ fun CanchasScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    "Contenido de Canchas",
+                    "Contenido de Agendar Partido",
                     color = DarkGreen,
                     style = MaterialTheme.typography.headlineMedium
                 )

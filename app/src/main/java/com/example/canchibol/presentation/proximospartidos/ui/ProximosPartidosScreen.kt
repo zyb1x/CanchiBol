@@ -1,6 +1,5 @@
-package com.example.canchibol.presentation.canchas.ui
+package com.example.canchibol.presentation.proximospartidos.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,10 +12,15 @@ import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.canchibol.presentation.calendario.ui.components.PartidosList
+import com.example.canchibol.presentation.proximospartidos.viewmodel.ProximosPartidosViewModel
+import com.example.canchibol.presentation.proximospartidos.viewmodel.ProximosPartidosViewModelFactory
 import com.example.canchibol.ui.theme.DarkGreen
 import com.example.canchibol.ui.theme.LightGreen
 import com.example.canchibol.ui.theme.MediumGreen
@@ -24,18 +28,19 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CanchasScreen(
+fun ProximosPartidosScreen(
+    modifier: Modifier = Modifier,
     onNavigateToInicio: () -> Unit,
     onNavigateToPerfil: () -> Unit,
     onNavigateToProximosPartidos: () -> Unit,
-    onNavigateToAgendarPartido: () -> Unit,
-    onNavigateToCanchas: () -> Unit,
     onNavigateToCalendario: () -> Unit,
-    onNavigateToReporte: () -> Unit,
     onCerrarSesion: () -> Unit
 ) {
+    val context = LocalContext.current
+    val viewModel: ProximosPartidosViewModel = viewModel(factory = ProximosPartidosViewModelFactory(context))
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val uiState by viewModel.uiState
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -69,20 +74,8 @@ fun CanchasScreen(
 
                     NavigationDrawerItem(
                         label = { Text("Próximos Partidos") },
-                        selected = false,
-                        onClick = { scope.launch { drawerState.close() }; onNavigateToProximosPartidos() }
-                    )
-                    
-                    NavigationDrawerItem(
-                        label = { Text("Agendar Partido") },
-                        selected = false,
-                        onClick = { scope.launch { drawerState.close() }; onNavigateToAgendarPartido() }
-                    )
-                    
-                    NavigationDrawerItem(
-                        label = { Text("Canchas") },
                         selected = true,
-                        onClick = { scope.launch { drawerState.close() }; onNavigateToCanchas() },
+                        onClick = { scope.launch { drawerState.close() }; onNavigateToProximosPartidos() },
                         colors = NavigationDrawerItemDefaults.colors(selectedContainerColor = LightGreen)
                     )
                     
@@ -90,12 +83,6 @@ fun CanchasScreen(
                         label = { Text("Calendario") },
                         selected = false,
                         onClick = { scope.launch { drawerState.close() }; onNavigateToCalendario() }
-                    )
-
-                    NavigationDrawerItem(
-                        label = { Text("Reporte") },
-                        selected = false,
-                        onClick = { scope.launch { drawerState.close() }; onNavigateToReporte() }
                     )
 
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -129,7 +116,7 @@ fun CanchasScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Canchas", color = LightGreen) },
+                    title = { Text("Próximos Partidos", color = LightGreen) },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { if (drawerState.isClosed) drawerState.open() else drawerState.close() } }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menú", tint = LightGreen)
@@ -139,16 +126,16 @@ fun CanchasScreen(
                 )
             }
         ) { innerPadding ->
-            Box(
+            Column(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
+                    .fillMaxSize()
             ) {
-                Text(
-                    "Contenido de Canchas",
-                    color = DarkGreen,
-                    style = MaterialTheme.typography.headlineMedium
+                PartidosList(
+                    partidos = uiState.partidos,
+                    isLoading = uiState.isLoading,
+                    error = uiState.error,
+                    modifier = Modifier.fillMaxSize() // Modificador añadido
                 )
             }
         }
