@@ -188,40 +188,40 @@ fun LayoutRegistro(
         )
 
         // TextField de número de Empleado
-        OutlinedTextField(
-            value = noEmpleado,
-            onValueChange = { viewModel.onNoEmpleadoChange(it) },
-            modifier = Modifier
-                .width(300.dp)
-                .constrainAs(textFieldNEmpleado) {
-                    top.linkTo(textFieldApellidoMaterno.bottom, margin = 15.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            placeholder = {
-                Text("Número de empleado", fontSize = 14.sp, lineHeight = 14.sp)
-            },
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 14.sp,
-                lineHeight = 14.sp
-            ),
-            enabled = !isLoading,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            shape = RoundedCornerShape(10.dp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = LightGreen,
-                unfocusedContainerColor = GrayGreen,
-                focusedTextColor = MediumGreen,
-                unfocusedTextColor = MediumGreen,
-                cursorColor = MediumGreen,
-                focusedLeadingIconColor = DarkGreen,
-                focusedPlaceholderColor = MediumGreen,
-                unfocusedPlaceholderColor = DarkGreen,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
-        )
+//        OutlinedTextField(
+//            value = noEmpleado,
+//            onValueChange = { viewModel.onNoEmpleadoChange(it) },
+//            modifier = Modifier
+//                .width(300.dp)
+//                .constrainAs(textFieldNEmpleado) {
+//                    top.linkTo(textFieldApellidoMaterno.bottom, margin = 15.dp)
+//                    start.linkTo(parent.start)
+//                    end.linkTo(parent.end)
+//                },
+//            placeholder = {
+//                Text("Número de empleado", fontSize = 14.sp, lineHeight = 14.sp)
+//            },
+//            textStyle = LocalTextStyle.current.copy(
+//                fontSize = 14.sp,
+//                lineHeight = 14.sp
+//            ),
+//            enabled = !isLoading,
+//            singleLine = true,
+//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+//            shape = RoundedCornerShape(10.dp),
+//            colors = TextFieldDefaults.colors(
+//                focusedContainerColor = LightGreen,
+//                unfocusedContainerColor = GrayGreen,
+//                focusedTextColor = MediumGreen,
+//                unfocusedTextColor = MediumGreen,
+//                cursorColor = MediumGreen,
+//                focusedLeadingIconColor = DarkGreen,
+//                focusedPlaceholderColor = MediumGreen,
+//                unfocusedPlaceholderColor = DarkGreen,
+//                focusedIndicatorColor = Color.Transparent,
+//                unfocusedIndicatorColor = Color.Transparent
+//            )
+//        )
 
         // TextField de Correo
         OutlinedTextField(
@@ -230,7 +230,7 @@ fun LayoutRegistro(
             modifier = Modifier
                 .width(300.dp)
                 .constrainAs(textFieldCorreo) {
-                    top.linkTo(textFieldNEmpleado.bottom, margin = 15.dp)
+                    top.linkTo(textFieldApellidoMaterno.bottom, margin = 15.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },

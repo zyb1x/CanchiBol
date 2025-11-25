@@ -6,5 +6,6 @@ data class PartidoEntity(
     val equipo2: String,
     val fecha: String, // Formato YYYY-MM-DD
     val hora: String, // Formato HH:MM:SS
-    val cancha: String
+    val cancha: String,
+    val arbitro: String? = null
 )

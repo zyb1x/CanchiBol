@@ -31,7 +31,8 @@ class PartidoRepositoryImpl(
             equipo2 = cleanText(equipo2),
             fecha = fecha,
             hora = hora,
-            cancha = cleanText(cancha)
+            cancha = cleanText(cancha),
+            arbitro = arbitro?.let { cleanText(it) }
         )
     }
 

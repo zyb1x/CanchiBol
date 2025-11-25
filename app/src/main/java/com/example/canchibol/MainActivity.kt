@@ -69,7 +69,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         composable("registro") { backStackEntry ->
             LayoutRegistro(
                 modifier = Modifier.fillMaxSize(),
-                onVolverLogin = { navController.popBackStack() },
+                onVolverLogin = { navController.navigateUp() },
                 onRegistroExitoso = { navController.navigate("login") { popUpTo("registro") { inclusive = true } } },
             )
         }

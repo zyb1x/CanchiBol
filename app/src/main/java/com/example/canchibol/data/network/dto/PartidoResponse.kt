@@ -15,5 +15,7 @@ data class PartidoDto(
     @SerializedName("equipo2") val equipo2: String = "",
     @SerializedName("fecha") val fecha: String = "",
     @SerializedName("hora") val hora: String = "",
-    @SerializedName("cancha") val cancha: String = ""
+    @SerializedName("cancha") val cancha: String = "",
+    // NUEVO CAMPO OPCIONAL
+    @SerializedName("arbitro") val arbitro: String? = null
 )
