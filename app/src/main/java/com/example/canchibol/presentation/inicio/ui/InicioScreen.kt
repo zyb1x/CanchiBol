@@ -72,7 +72,7 @@ fun LayoutInicio(
                 contentColor = LightGreen
             )
         ) {
-            Text(text = "Iniciar sesión", fontSize = 15.sp)
+            Text(text = "Iniciar sesión", fontSize = 13.sp)
         }
 
         Button(
