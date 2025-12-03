@@ -1,4 +1,4 @@
-// presentation/calendario/viewmodel/CalendarioViewModel.kt
+
 package com.example.canchibol.presentation.calendario.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -10,9 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
-
+import java.util.*
 
 class CalendarioViewModel(
     private val partidoRepository: PartidoRepository
@@ -29,19 +27,45 @@ class CalendarioViewModel(
         _uiState.value = _uiState.value.copy(showDatePicker = false)
     }
 
+    private fun adjustDateFromDatePicker(dateMillis: Long): Long {
+
+        val calendarUTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendarUTC.timeInMillis = dateMillis
+
+
+        val year = calendarUTC.get(Calendar.YEAR)
+        val month = calendarUTC.get(Calendar.MONTH)
+        val day = calendarUTC.get(Calendar.DAY_OF_MONTH)
+
+
+        val calendarLocal = Calendar.getInstance()
+        calendarLocal.set(Calendar.YEAR, year)
+        calendarLocal.set(Calendar.MONTH, month)
+        calendarLocal.set(Calendar.DAY_OF_MONTH, day)
+        calendarLocal.set(Calendar.HOUR_OF_DAY, 12)
+        calendarLocal.set(Calendar.MINUTE, 0)
+        calendarLocal.set(Calendar.SECOND, 0)
+        calendarLocal.set(Calendar.MILLISECOND, 0)
+
+        return calendarLocal.timeInMillis
+    }
+
     fun onDateSelected(dateMillis: Long?) {
         if (dateMillis != null) {
+
+            val adjustedDate = adjustDateFromDatePicker(dateMillis)
+
             // Verificar si es viernes, sábado o domingo
-            if (esFinDeSemana(dateMillis)) {
+            if (esFinDeSemana(adjustedDate)) {
                 _uiState.value = _uiState.value.copy(
-                    selectedDate = dateMillis,
+                    selectedDate = adjustedDate,
                     showDatePicker = false,
                     isLoading = true
                 )
-                loadPartidos(dateMillis)
+                loadPartidos(adjustedDate)
             } else {
                 _uiState.value = _uiState.value.copy(
-                    selectedDate = dateMillis,
+                    selectedDate = adjustedDate,
                     showDatePicker = false,
                     partidos = emptyList(),
                     error = "Solo puedes seleccionar viernes, sábados y domingos"
@@ -90,9 +114,15 @@ class CalendarioViewModel(
     }
 
     private fun formatDateForApi(dateMillis: Long): String {
-        val date = java.util.Date(dateMillis)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = dateMillis
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return formatter.format(date)
+        return formatter.format(Date(calendar.timeInMillis))
     }
 }
 

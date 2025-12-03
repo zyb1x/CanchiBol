@@ -32,6 +32,7 @@ import com.example.canchibol.ui.theme.DarkGreen
 import com.example.canchibol.ui.theme.LightGreen
 import com.example.canchibol.ui.theme.MediumGreen
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -242,7 +243,18 @@ fun DatePickerModal(
 
 @RequiresApi(Build.VERSION_CODES.N)
 fun formatDate(timestamp: Long): String {
-    val date = Date(timestamp)
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = timestamp
+
+
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    calendar.set(year, month, day, 12, 0, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+
+    val date = Date(calendar.timeInMillis)
     val formatter = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale("es", "ES"))
     return formatter.format(date)
 }
