@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,8 @@ fun ProximosPartidosScreen(
     onNavigateToPerfil: () -> Unit,
     onNavigateToProximosPartidos: () -> Unit,
     onNavigateToCalendario: () -> Unit,
-    onCerrarSesion: () -> Unit
+    onCerrarSesion: () -> Unit,
+    onNavigateToMapa: () -> Unit
 ) {
     val context = LocalContext.current
     val viewModel: ProximosPartidosViewModel = viewModel(factory = ProximosPartidosViewModelFactory(context))
@@ -105,6 +107,18 @@ fun ProximosPartidosScreen(
                         selected = false,
                         icon = { Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = "Cerrar sesión", tint = DarkGreen) },
                         onClick = { scope.launch { drawerState.close() }; onCerrarSesion() }
+                    )
+
+                    Spacer(Modifier.height(250.dp))
+
+                    // Footer del drawer
+                    Text(
+                        "CanchiBol v1.0",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = DarkGreen.copy(alpha = 0.6f),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.CenterHorizontally)
                     )
 
                     Spacer(Modifier.height(12.dp))

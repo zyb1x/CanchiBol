@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.canchibol.presentation.calendario.ui.CalendarioScreen
 import com.example.canchibol.presentation.inicio.ui.LayoutInicio
 import com.example.canchibol.presentation.iniciodesesion.ui.LayoutIniciarSesion
+
 import com.example.canchibol.presentation.perfil.ui.PerfilScreen
 import com.example.canchibol.presentation.proximospartidos.ui.ProximosPartidosScreen
 import com.example.canchibol.presentation.registro.ui.LayoutRegistro
@@ -83,6 +84,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 onNavigateToPerfil = { onNavigateTo("perfil") },
                 onNavigateToProximosPartidos = { onNavigateTo("proximos_partidos") },
                 onNavigateToCalendario = { onNavigateTo("calendario") },
+                onNavigateToMapa = {onNavigateTo("mapa")},
                 onCerrarSesion = onLogout
             )
         }
@@ -100,9 +102,10 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         composable("proximos_partidos") { backStackEntry ->
             ProximosPartidosScreen(
                 onNavigateToInicio = { onNavigateTo("menu") },
-                onNavigateToPerfil = { onNavigateTo("perfil") },
+                onNavigateToPerfil = { onNavigateTo("per fil") },
                 onNavigateToProximosPartidos = { onNavigateTo("proximos_partidos") },
                 onNavigateToCalendario = { onNavigateTo("calendario") },
+                onNavigateToMapa = {onNavigateTo("mapa")},
                 onCerrarSesion = onLogout
             )
         }
@@ -113,8 +116,10 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 onNavigateToPerfil = { onNavigateTo("perfil") },
                 onNavigateToProximosPartidos = { onNavigateTo("proximos_partidos") },
                 onNavigateToCalendario = { onNavigateTo("calendario") },
+                onNavigateToMapa = {onNavigateTo("mapa")},
                 onCerrarSesion = onLogout
             )
         }
+
     }
 }

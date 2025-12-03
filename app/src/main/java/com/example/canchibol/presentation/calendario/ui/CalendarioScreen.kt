@@ -43,7 +43,8 @@ fun CalendarioScreen(
     onNavigateToPerfil: () -> Unit,
     onNavigateToProximosPartidos: () -> Unit,
     onNavigateToCalendario: () -> Unit,
-    onCerrarSesion: () -> Unit
+    onCerrarSesion: () -> Unit,
+    onNavigateToMapa: () -> Unit
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -114,6 +115,18 @@ fun CalendarioScreen(
                         selected = false,
                         icon = { Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = "Cerrar sesión", tint = DarkGreen) },
                         onClick = { scope.launch { drawerState.close() }; onCerrarSesion() }
+                    )
+
+                    Spacer(Modifier.height(250.dp))
+
+                    // Footer del drawer
+                    Text(
+                        "CanchiBol v1.0",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = DarkGreen.copy(alpha = 0.6f),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.CenterHorizontally)
                     )
 
                     Spacer(Modifier.height(12.dp))

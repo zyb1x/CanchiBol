@@ -10,6 +10,8 @@ val DarkGreen = Color(0xFF3A5A40)
 val DeepGreen = Color(0xFF344E41)
 
 var GrayGreen = Color(0xFFDADADA)
+val BackgroundGreen = Color(0xFFF0F7E6)
+val TextDark = Color(0xFF1A3310)
 
 
 val PrimaryLight = MediumGreen
